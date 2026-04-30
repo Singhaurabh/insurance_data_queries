@@ -22,6 +22,9 @@ this dataset provides us with the tools we need to uncover them!
 - LAG/LEAD for period-over-period comparisons
 - Running totals using SUM() OVER()
 - Moving averages using AVG() OVER()
+- CTE(common table expression)
+- Subquesries
+- Joins (all types)
 
 # total number of questions solved -16
 
