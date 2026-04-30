@@ -23,14 +23,11 @@ this dataset provides us with the tools we need to uncover them!
 - Running totals using SUM() OVER()
 - Moving averages using AVG() OVER()
 
-## Key Insights
-- [Insight 1 from your analysis]
-- [Insight 2]
-- [Insight 3]
+# total number of questions solved -16
 
 ## Files
-- `insurance_analysis.sql` - All SQL queries
-- `insurance_dataset.csv` - Raw data
+- `insurance_data_questions.sql` - All SQL queries
+- `insurance_data.csv` - Raw data
 
 ## Tools
 SQL (PostgreSQL/MySQL)
