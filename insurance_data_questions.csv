@@ -132,4 +132,58 @@ select PatientID,claim,children,avg_claim,abs(avg_claim - claim) as diff_in_clai
 select * ,first_value(claim) over(order by age) as val_diff
  from 
 insurance_data;
+-------------------------------------------------------------------------------------------------------------------------------------------------
+# few more questions on the same dataset 
+# How many patients have claimed more than the average claim amount for patients who are smokers and have at least one child,
+# and belong to the southeast region?
+select count(PatientID)
+from insurance_data
+where claim > (select avg(claim) from insurance_data
+where region = "southeast" and smoker = "Yes" and children >=1) 
+and region = "southeast" and smoker = "Yes" and children >=1;
+-------------------------------------------------------------------------------------------------------------------------------------------------
+#How many patients have claimed more than the average claim amount for patients who are not smokers and have a BMI greater
+# than the average BMI for patients who have at least one child?
+select count(PatientID)
+from insurance_data
+where smoker = "No"  and 
+claim > (select avg(claim) from insurance_data where smoker = "No" ) and 
+bmi > (select avg(bmi) from insurance_data where children >=1);
+-------------------------------------------------------------------------------------------------------------------------------------------------
+#How many patients have claimed more than the average claim amount for patients who have a BMI greater than the average BMI for patients
+# who are diabetic, have at least one child, and are from the southwest region?
+select count(PatientID) from insurance_data
+where claim >
+(select avg (claim) from insurance_data 
+where bmi >
+(select avg(bmi) from insurance_data where diabetic = "Yes" and children >=1 and region = "southwest"));
+-------------------------------------------------------------------------------------------------------------------------------------------------
+#What is the difference in the average claim amount between patients who are smokers and patients who are non-smokers, 
+#and have the same BMI and number of children?
+
+with smoker_cte as (select bmi,children,avg(claim) as avg_claim from insurance_data 
+where smoker = 'Yes'
+group by bmi,children
+),
+non_smoker_cte as (select bmi,children,avg(claim) as avg_claim from insurance_data
+where smoker ="No" group by bmi,children
+),
+above_avg as (select s.bmi,s.children,round(abs(s.avg_claim - n.avg_claim),2)as diff_in_claim
+from smoker_cte s
+join non_smoker_cte n
+on s.bmi = n.bmi
+and s.children =n.children
+)
+select * from 
+above_avg;
+
+# second way to solve this problem
+select bmi,children,
+avg(case when smoker ="Yes" then claim end) as avg_claim_smoker,
+avg(case when smoker ="No" then claim end) as avg_non_smoker,
+avg(case when smoker ="Yes" then claim end) - avg(case when smoker ="No" then claim end) as diff_in_claim
+from insurance_data
+group by bmi,children;
+
+
 
